@@ -3,10 +3,8 @@ namespace test_automation_2023
 {
 	public class PassFail
 	{
-		public enum Outcome
+		public PassFail()
 		{
-			Pass,
-			Fail
 		}
 	}
 }
