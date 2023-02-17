@@ -11,35 +11,6 @@ namespace test_automation_2023
     public class Steps
     {
 
-
-
-
-
-
-
-
-        //open browser type
-        public IWebDriver SelectBrowser(string value)
-        {
-            IWebDriver driver;
-
-            switch (value)
-            {
-                case "Chrome":
-                    driver = new ChromeDriver();
-                    break;
-                case "Safari":   //test
-                    driver = new SafariDriver();
-                    break;
-                default:
-                    driver = new ChromeDriver();
-                    break;
-            }
-
-            return driver;
-
-        }
-
         //set browser dimensions for devise type
 
         public void SetDimensions(IWebDriver driver, int width, int height)
@@ -49,8 +20,34 @@ namespace test_automation_2023
         }
 
 
+        public void GoToPage(IWebDriver wDriver,  string url)
+        {
+            wDriver.Navigate().GoToUrl(url);
+        }
 
         
+        public string SaveScreenshot(IWebDriver wDriver)
+        {
+            string imgName = "screenshot" + DateTime.Now;
+            // Take a screenshot of the current browser window
+            ITakesScreenshot screenshotDriver = wDriver as ITakesScreenshot;
+            Screenshot screenshot = screenshotDriver.GetScreenshot();
+
+            // Save the screenshot to a file
+            screenshot.SaveAsFile(imgName);
+            return imgName;
+        }
+
+      
+        public void CloseBrowser(IWebDriver wDriver)
+        {
+            // Quit the driver
+            wDriver.Quit();
+
+        }
+
+
+
     }
 }
 

@@ -12,8 +12,6 @@ namespace test_automation_2023
 		List<int> colors;
 
 
-
-
 		public List<int> GetImageDimensions(Bitmap img)
 		{
 			Bitmap newImg = img;

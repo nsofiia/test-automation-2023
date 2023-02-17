@@ -5,10 +5,11 @@ namespace test_automation_2023
 	{
 		public Report()
 		{
-			string name; //from test case
-			DateTime dateTimeExecuted;
-			PassFail.Outcome outcome;
-			string exceptionMessage;
+			string TestName = " "; //from test case
+			DateTime DateTimeExecuted;
+			PassFail.Outcome Outcome;
+			string ExceptionMessage = " ";
+			string SaveAtLocation;
 		}
 	}
 }
