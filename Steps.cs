@@ -8,20 +8,27 @@ using test_automation_2023;
 
 namespace test_automation_2023
 {
-    public class DriverMethods
+    public class Steps
     {
 
+
+
+
+
+
+
+
         //open browser type
-        public static void SelectBrowser(Preconditions.Browser provideValue)
+        public IWebDriver SelectBrowser(string value)
         {
             IWebDriver driver;
 
-            switch (provideValue)
+            switch (value)
             {
-                case Preconditions.Browser.Chrome:
+                case "Chrome":
                     driver = new ChromeDriver();
                     break;
-                case Preconditions.Browser.Safari:
+                case "Safari":   //test
                     driver = new SafariDriver();
                     break;
                 default:
@@ -29,17 +36,21 @@ namespace test_automation_2023
                     break;
             }
 
+            return driver;
+
         }
 
         //set browser dimensions for devise type
-     //   public static void 
+
+        public void SetDimensions(IWebDriver driver, int width, int height)
+        {
+            driver.Manage().Window.Size = new System.Drawing.Size(width, height);
+
+        }
 
 
 
-
-
-
-
+        
     }
 }
 
