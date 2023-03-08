@@ -11,21 +11,11 @@ namespace test_automation_2023
         public List<Step> Steps = new List<Step>();
         private IWebDriver _driver;
 
-        //public ExecutionPreconditions ExecutionPreconditions;
 
-        //        public void Init()
-        //		{
-        //			switch(ExecutionPreconditions.Browser)
-        //			{
-        //				case BrowsrType.Chrome:
-        //            driver = new ChromeDriver();
-        //					break;
-        ////				//case BrowsrType.Safari:
-        //	//				driver = new S
-
-        //			}
-
-
+        public TestCase(string testName)
+        {
+            Name = testName;
+        }
 
         public void  ChooseBrowser(BrowserType browser)
         {
@@ -56,12 +46,6 @@ namespace test_automation_2023
             {
                 step.Driver = _driver;
                 var result = step.Execute();
-
-                if(!result.Pass)
-                {
-                    report.FailedSteps.Add(step);
-                }
-
             }
             return report;
         }

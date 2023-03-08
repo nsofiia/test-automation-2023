@@ -2,6 +2,9 @@
 {
     public class StepResult
     {
-        public bool Pass;
+        public bool Pass = true;
+        public string Exception = null;
+        public DateTime StepStarted;
+        public DateTime StepEnded;
     }
 }

@@ -14,54 +14,38 @@ namespace test_automation_2023
         public int Width;
         public int Height;
         public string Url;
-        public string Locator;
+        public string Locator; //for xPath or by text search
         public string TextToType;
         public string PathTextToCompare; //storage location for text file to compare
         public string PathImageToCompare;
         public IWebDriver Driver; //create enum with driver types or make it a step
         public StepType Type;     //enum with labels of kind of step
-
-
-//        public Step(StepType st)
-//        {
-//            Type = st;
-//}
-
+        public StepResult Result;
     
 
         public StepResult Execute()
         {
-            StepResult stepResult = new StepResult();
+            Result = new StepResult();
 
             switch (Type)
             {
-
-
-                //ChooseBrowser,
-                //SetWindowSize,!
-                //GoToUrl,!
-                //GetPageTitle,
-                //FindElementByXpath,!
-                //FindElementByPartialLinkText,!
-                //ClickElementXpath,!
-                //ClickElementByPartialLinkText,!
-                //TakeScreenshot,!
-                //Scroll,
-                //AcceptAlert,
-                //TypeText,!
-                //ClearFieldByXpath,!
-                //Back,!
-                //Forward,!
-                //Refresh,!
-                //GetText,!
-                //VerifyExistance,
-                //CloseBrowser!
-
-
                 case StepType.GoToUrl:
-                    Driver.Navigate().GoToUrl(Url);
-                    stepResult.Pass = true;
+                    Result.StepStarted = DateTime.Now;
+                    try
+                    {
+                        Driver.Navigate().GoToUrl(Url);
+                        Result.StepEnded = DateTime.Now;
+                    }
+                    catch (Exception e)
+                    {
+                        Result.Exception = e.ToString();
+                    }
+                    if (Result.Exception != null)
+                    {
+                        Result.Pass = false;
+                    }
                     break;
+
                 case StepType.SetWindowSize:
                     Driver.Manage().Window.Size = new System.Drawing.Size(Width, Height);
                     break;
@@ -131,7 +115,7 @@ namespace test_automation_2023
                 //    break;
 
             }
-            return stepResult;
+            return Result;
         }
 
 

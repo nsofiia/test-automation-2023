@@ -45,13 +45,13 @@ class Program
         //generate report for environment + test case + datetime
         PrintIntro();
 
-        var testCases = RetrieveDataFromXml();
-        int testCaseCount = testCases.Count;
-        PrintOptions(testCaseCount);
-        char answer = Console.ReadKey().KeyChar;
-        if (answer == 'y')
-        {
-            TestCase newTest = new TestCase();
+        List<TestCase> testCases = new List<TestCase>(); //RetrieveDataFromXml();
+        //int testCaseCount = testCases.Count;
+        //PrintOptions(testCaseCount);
+        //char answer = Console.ReadKey().KeyChar;
+        //if (answer == 'y')
+        //{
+            TestCase newTest = new TestCase("test");
             Step s = new Step();
             s.Type = StepType.GoToUrl;
             // s.Url = "https://stage-admin.kidztopros.com/";
@@ -82,9 +82,13 @@ class Program
             Step s4 = new Step();
             s4.Type = StepType.CloseBrowser;
 
+            testCases.Add(newTest);
 
-            newTest.ChooseBrowser(BrowserType.Safari);
-            newTest.RunTest();
+            SaveToXml(testCases);
+
+
+            //newTest.ChooseBrowser(BrowserType.Safari);
+            //newTest.RunTest();
 
           //  newTest.ChooseBrowser(BrowserType.Safari);
 
@@ -115,6 +119,6 @@ class Program
 
 
 
-}
+
 
 
