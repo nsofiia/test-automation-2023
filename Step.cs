@@ -20,25 +20,23 @@ namespace test_automation_2023
         public string NewText;
         public string OrigImage;
         public string NewImg;
-        public IWebDriver Driver; //create enum with driver types or make it a step     // TODO: Look up   [NonSerialized]
+        [NonSerialized()] public IWebDriver Driver; //create enum with driver types or make it a step // TODO: Look up   [NonSerialized()]
         public StepType Type;     //enum with labels of kind of step
         public StepResult Result;
 
-        //public void SetDriver(IWebDriver dr)
-        //{
-        //    Driver = dr;
-        //}
+        public void SetDriver(IWebDriver dr)
+        {
+            Driver = dr;
+        }
 
         public StepResult Execute()
         {
             Result = new StepResult();
-
-            string new_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_text");
-            string orig_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "orig_text");
-            string report_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "reports_text"); ;
-            string reportTextName = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.txt";
-            string new_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_screenshots");
-            string orig_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "orig_screenshots");
+            string new_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "user", "new_text");
+            string orig_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "user", "orig_text");
+            string report_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "user", "reports_text");
+            string new_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "user", "new_screenshots");
+            string orig_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "user", "orig_screenshots");
 
             switch (Type)
             {
@@ -58,7 +56,6 @@ namespace test_automation_2023
                     //    Result.Pass = false;
                     //}
                     break;
-
                 case StepType.SetWindowSize:
                     Driver.Manage().Window.Size = new System.Drawing.Size(Width, Height);
                     break;
@@ -80,8 +77,6 @@ namespace test_automation_2023
                 case StepType.ClearFieldByXpath:
                     Driver.FindElement(By.XPath(Locator)).Clear();
                     break;
-
-
                 case StepType.TakeScreenshot:
                     Directory.CreateDirectory(new_screenshDirPath);
                     Screenshot screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
@@ -105,8 +100,8 @@ namespace test_automation_2023
                 case StepType.GetText:
                     // string textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_text");
                     Directory.CreateDirectory(new_textDirPath);
-                    string textName = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.txt";
-                    string textPath = Path.Combine(new_textDirPath, textName);
+                    NewText = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.txt";
+                    string textPath = Path.Combine(new_textDirPath, NewText);
                     string text = Driver.FindElement(By.XPath(Locator)).Text;
                     File.WriteAllText(textPath, text);
                     break;
@@ -120,30 +115,46 @@ namespace test_automation_2023
                     break;
 
                 case StepType.CompareText:
-                    string[] origText = File.ReadAllLines(Path.Combine(orig_textDirPath, OrigText));
-                    string[] newText = File.ReadAllLines(Path.Combine(new_textDirPath, NewText));
+                    Directory.CreateDirectory(report_textDirPath);
+                    string[] origText = File.ReadAllLines(Path.Combine("user", orig_textDirPath, OrigText));
+                    string[] newText = File.ReadAllLines(Path.Combine("user", new_textDirPath, NewText));
+                    string reportTextName = $"{DateTime.Now:HH.mm--dd.MM.yyyy}.txt";
 
                     for (int i = 0; i < origText.Length; i++)
                     {
-                        if (newText[i].Equals(newText[i]))
+                        if (newText[i].Equals(origText[i]))
                         {
-                           
-                            File.AppendAllText(Path.Combine(report_textDirPath,reportTextName),origText[i] + Environment.NewLine + newText + Environment.NewLine + "pass" + Environment.NewLine + Environment.NewLine);
+                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName), origText[i] + Environment.NewLine + newText + Environment.NewLine + "--- pass ---" + Environment.NewLine + Environment.NewLine);
+                        }
+                        else
+                        {
+                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName), origText[i] + Environment.NewLine + newText + Environment.NewLine + "*** FAIL ***" + Environment.NewLine + Environment.NewLine);
                         }
 
                     }
 
+                    string[] reportCheck = File.ReadAllLines(Path.Combine("user", report_textDirPath, reportTextName));
 
-
-
-                    bool textIsEqual = string.Equals(origText, newText);
-
-                    if (!textIsEqual)
+                    for (int i = 0; i < reportCheck.Length; i++)
                     {
-
+                        if (reportCheck[i].Contains("FAIL"))
+                        {
+                            File.Move(Path.Combine("user", report_textDirPath, reportTextName), Path.Combine("user", report_textDirPath, "*FAIL*" + reportTextName));
+                        }
                     }
-
                     break;
+
+
+
+
+                    //bool textIsEqual = string.Equals(origText, newText);
+
+                    //if (!textIsEqual)
+                    //{
+
+                    //}
+
+                    //break;
 
 
                     //case StepType.CompareImages:

@@ -9,17 +9,14 @@ using static test_automation_2023.Step;
 using static test_automation_2023.UI;
 using static test_automation_2023.Logic;
 
-
 namespace test_automation_2023;
 
 class Program
 {
 
-
-
     static void Main(string[] args)
     {
-      
+        Directory.CreateDirectory("user");
         List<string> stepNames = new List<string> { "ChooseBrowser",
         "SetWindowSize",
         "GoToUrl",
@@ -83,6 +80,12 @@ class Program
         Step s4 = new Step();
         s4.Type = StepType.CloseBrowser;
         newTest.Steps.Add(s4);
+
+        Step s5 = new Step();
+        s5.OrigText = Path.Combine(Directory.GetCurrentDirectory(), "user", "orig_text", "2023.04.03-17-43-10.txt");
+        s5.NewText = Path.Combine(Directory.GetCurrentDirectory(), "user", "new_text", "2023.04.06-11-58-02.txt");
+        s5.Type = StepType.CompareText;
+        newTest.Steps.Add(s5);
 
         testCases.Add(newTest);
 
