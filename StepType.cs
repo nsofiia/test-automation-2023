@@ -20,6 +20,7 @@
         Refresh,
         GetText,
         VerifyExistance,
-        CloseBrowser
+        CloseBrowser,
+        CompareText
     }
 }

@@ -11,7 +11,9 @@ namespace test_automation_2023
         public List<Step> Steps = new List<Step>();
         private IWebDriver _driver;
 
-
+        public TestCase()
+        {
+        }
         public TestCase(string testName)
         {
             Name = testName;
@@ -44,7 +46,7 @@ namespace test_automation_2023
           
             foreach (var step in Steps)
             {
-                step.Driver = _driver;
+                step.SetDriver(_driver);
                 var result = step.Execute();
             }
             return report;

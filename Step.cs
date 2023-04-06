@@ -16,34 +16,47 @@ namespace test_automation_2023
         public string Url;
         public string Locator; //for xPath or by text search
         public string TextToType;
-        public string PathTextToCompare; //storage location for text file to compare
-        public string PathImageToCompare;
-        public IWebDriver Driver; //create enum with driver types or make it a step
+        public string OrigText; //storage location for text file to compare
+        public string NewText;
+        public string OrigImage;
+        public string NewImg;
+        public IWebDriver Driver; //create enum with driver types or make it a step     // TODO: Look up   [NonSerialized]
         public StepType Type;     //enum with labels of kind of step
         public StepResult Result;
-    
+
+        //public void SetDriver(IWebDriver dr)
+        //{
+        //    Driver = dr;
+        //}
 
         public StepResult Execute()
         {
             Result = new StepResult();
 
+            string new_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_text");
+            string orig_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "orig_text");
+            string report_textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "reports_text"); ;
+            string reportTextName = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.txt";
+            string new_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_screenshots");
+            string orig_screenshDirPath = Path.Combine(Directory.GetCurrentDirectory(), "orig_screenshots");
+
             switch (Type)
             {
                 case StepType.GoToUrl:
                     Result.StepStarted = DateTime.Now;
-                    try
-                    {
-                        Driver.Navigate().GoToUrl(Url);
-                        Result.StepEnded = DateTime.Now;
-                    }
-                    catch (Exception e)
-                    {
-                        Result.Exception = e.ToString();
-                    }
-                    if (Result.Exception != null)
-                    {
-                        Result.Pass = false;
-                    }
+                    //try
+                    //{
+                    Driver.Navigate().GoToUrl(Url);
+                    Result.StepEnded = DateTime.Now;
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Result.Exception = e.ToString();
+                    //}
+                    //if (Result.Exception != null)
+                    //{
+                    //    Result.Pass = false;
+                    //}
                     break;
 
                 case StepType.SetWindowSize:
@@ -70,11 +83,10 @@ namespace test_automation_2023
 
 
                 case StepType.TakeScreenshot:
-                    string screenshotsDirPath = Path.Combine(Directory.GetCurrentDirectory(), "screenshots");
-                    Directory.CreateDirectory(screenshotsDirPath);
+                    Directory.CreateDirectory(new_screenshDirPath);
                     Screenshot screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
                     string screenshotName = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.png";
-                    string screenshotPath = Path.Combine(screenshotsDirPath, screenshotName);
+                    string screenshotPath = Path.Combine(new_screenshDirPath, screenshotName);
                     screenshot.SaveAsFile(screenshotPath, ScreenshotImageFormat.Png);
                     break;
 
@@ -91,10 +103,10 @@ namespace test_automation_2023
                     break;
 
                 case StepType.GetText:
-                    string textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "text");
-                    Directory.CreateDirectory(textDirPath);
+                    // string textDirPath = Path.Combine(Directory.GetCurrentDirectory(), "new_text");
+                    Directory.CreateDirectory(new_textDirPath);
                     string textName = $"{DateTime.Now:yyyy.MM.dd-HH-mm-ss}.txt";
-                    string textPath = Path.Combine(textDirPath, textName);
+                    string textPath = Path.Combine(new_textDirPath, textName);
                     string text = Driver.FindElement(By.XPath(Locator)).Text;
                     File.WriteAllText(textPath, text);
                     break;
@@ -107,12 +119,38 @@ namespace test_automation_2023
                     Driver.Quit();
                     break;
 
+                case StepType.CompareText:
+                    string[] origText = File.ReadAllLines(Path.Combine(orig_textDirPath, OrigText));
+                    string[] newText = File.ReadAllLines(Path.Combine(new_textDirPath, NewText));
 
-                //case StepType.CompareImages:
+                    for (int i = 0; i < origText.Length; i++)
+                    {
+                        if (newText[i].Equals(newText[i]))
+                        {
+                           
+                            File.AppendAllText(Path.Combine(report_textDirPath,reportTextName),origText[i] + Environment.NewLine + newText + Environment.NewLine + "pass" + Environment.NewLine + Environment.NewLine);
+                        }
 
-                //    //to do
+                    }
 
-                //    break;
+
+
+
+                    bool textIsEqual = string.Equals(origText, newText);
+
+                    if (!textIsEqual)
+                    {
+
+                    }
+
+                    break;
+
+
+                    //case StepType.CompareImages:
+
+                    //    //to do
+
+                    //    break;
 
             }
             return Result;

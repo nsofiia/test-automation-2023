@@ -3,10 +3,10 @@ using System.Xml.Serialization;
 
 namespace test_automation_2023
 {
-    public class Logic
+    public static class Logic
     {
-        static readonly XmlSerializer xml = new XmlSerializer(typeof(List<TestCase>));
-
+        public static XmlSerializer xml = new XmlSerializer(typeof(List<TestCase>));
+        static string xmlPath = Path.Combine(Directory.GetCurrentDirectory(), "TestCases");
         /// <summary>
         /// save data to xml
         /// </summary>
@@ -17,41 +17,41 @@ namespace test_automation_2023
         {
             try
             {
-                string xmlPath = Path.Combine(Directory.GetCurrentDirectory(), "TestCases");
                 Directory.CreateDirectory(xmlPath);
-                FileStream file = File.Create(Path.Combine(xmlPath, "TestCases.xml")); 
+                FileStream file = File.Create(Path.Combine(xmlPath, "TestCases.xml"));
                 xml.Serialize(file, testCasesList);
+                file.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// retrieve data from xml
+        /// </summary>
+        /// <param name="path">path to the file</param>
+        /// <param name="fileXml"></param>
+        /// <param name="list"></param>
+        public static List<TestCase> RetrieveDataFromXml()
+        {
+            List<TestCase> list = new List<TestCase>();
+
+            try
+            {
+                using (FileStream file = File.OpenRead(Path.Combine(xmlPath, "TestCases.xml")))
+                // retrieve the list from saved xml
+                {
+                    list = xml.Deserialize(file) as List<TestCase>;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
+            return list;
         }
-
-        ///// <summary>
-        ///// retrieve data from xml
-        ///// </summary>
-        ///// <param name="path">path to the file</param>
-        ///// <param name="fileXml"></param>
-        ///// <param name="list"></param>
-        //public static List<TestCase> RetrieveDataFromXml()
-        //{
-        //    List<TestCase> list = new List<TestCase>();
-
-        //    try
-        //    {
-        //        using (FileStream file = File.OpenRead())
-        //        // retrieve the list from saved xml
-        //        {
-        //            list = xml.Deserialize(file) as List<TestCase>;
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.Message);
-        //    }
-        //    return list;
-        //}
 
 
 
