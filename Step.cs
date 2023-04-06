@@ -118,17 +118,20 @@ namespace test_automation_2023
                     Directory.CreateDirectory(report_textDirPath);
                     string[] origText = File.ReadAllLines(Path.Combine("user", orig_textDirPath, OrigText));
                     string[] newText = File.ReadAllLines(Path.Combine("user", new_textDirPath, NewText));
-                    string reportTextName = $"{DateTime.Now:HH.mm--dd.MM.yyyy}.txt";
+                    string reportTextName = $"{DateTime.Now:[HH.mm][dd.MM.yyyy]}.txt";
 
                     for (int i = 0; i < origText.Length; i++)
                     {
                         if (newText[i].Equals(origText[i]))
                         {
-                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName), origText[i] + Environment.NewLine + newText + Environment.NewLine + "--- pass ---" + Environment.NewLine + Environment.NewLine);
+                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName),
+                                "ORIGINAL " + Environment.NewLine+ Environment.NewLine + origText[i] + Environment.NewLine + Environment.NewLine + "Characters total: " + origText[i].Length + Environment.NewLine + Environment.NewLine + "FETCHED" + Environment.NewLine + Environment.NewLine + newText[i] + Environment.NewLine +  Environment.NewLine + "Characters total: " + origText[i].Count() + Environment.NewLine + Environment.NewLine +
+                                "--- pass ---");
                         }
                         else
                         {
-                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName), origText[i] + Environment.NewLine + newText + Environment.NewLine + "*** FAIL ***" + Environment.NewLine + Environment.NewLine);
+                            File.AppendAllText(Path.Combine("user", report_textDirPath, reportTextName),
+                               "ORIGINAL " + Environment.NewLine + Environment.NewLine + origText[i] + Environment.NewLine + Environment.NewLine + "Characters total: " + origText[i].Count() + Environment.NewLine + Environment.NewLine + "FETCHED" + Environment.NewLine + Environment.NewLine + newText[i] + Environment.NewLine + Environment.NewLine + "Characters total: " + newText[i].Count() + Environment.NewLine + Environment.NewLine + "*** FAIL ***");
                         }
 
                     }
@@ -136,10 +139,10 @@ namespace test_automation_2023
                     string[] reportCheck = File.ReadAllLines(Path.Combine("user", report_textDirPath, reportTextName));
 
                     for (int i = 0; i < reportCheck.Length; i++)
-                    {
+                    {         
                         if (reportCheck[i].Contains("FAIL"))
                         {
-                            File.Move(Path.Combine("user", report_textDirPath, reportTextName), Path.Combine("user", report_textDirPath, "*FAIL*" + reportTextName));
+                            File.Move(Path.Combine("user", report_textDirPath, reportTextName), Path.Combine("user", report_textDirPath, "FAIL" + reportTextName));
                         }
                     }
                     break;
